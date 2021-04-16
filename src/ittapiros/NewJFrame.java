@@ -8,6 +8,11 @@ package ittapiros;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +28,11 @@ public class NewJFrame extends javax.swing.JFrame {
         initComponents();
         megvanAGolyo = false;
         golyoPozicio = rnd.nextInt(3)+1;
+        if (megvanAGolyo == true) {
+            lbVisszajelzes.setText("Megvan a golyó");
+        }else {
+            lbVisszajelzes.setText("Nincs meg a golyó");
+        }
     }
 
     /**
@@ -87,6 +97,11 @@ public class NewJFrame extends javax.swing.JFrame {
         mnFajl.add(mnMentes);
 
         mnBetolt.setText("Betöltés");
+        mnBetolt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnBetoltActionPerformed(evt);
+            }
+        });
         mnFajl.add(mnBetolt);
 
         jMenuBar1.add(mnFajl);
@@ -171,7 +186,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void mnMentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnMentesActionPerformed
         try {
-            FileWriter writer = new FileWriter("confix.txt");
+            FileWriter writer = new FileWriter("config.txt");
             BufferedWriter mentes = new BufferedWriter(writer);
             mentes.write(Integer.toString(golyoPozicio)+ "\n");
             mentes.write(Boolean.toString(megvanAGolyo) + "\n");
@@ -208,6 +223,26 @@ public class NewJFrame extends javax.swing.JFrame {
         
 
     }//GEN-LAST:event_btnPohar2ActionPerformed
+
+    private void mnBetoltActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnBetoltActionPerformed
+        ArrayList<String> adatok = new ArrayList<>(); 
+        Path path = Paths.get("config.txt");
+        if (Files.exists(path)) {
+           try {
+            List<String> sorok = Files.readAllLines(Paths.get("config.txt"));
+            for (int i = 0; i < sorok.size(); i++) {
+                String sor = sorok.get(i);
+                adatok.add(sor);
+            }            
+            } catch (IOException ex) {
+                System.out.println("Nem sikerült a mentés!");
+            } 
+        }
+        
+        golyoPozicio = Integer.parseInt(adatok.get(0));
+        megvanAGolyo = Boolean.parseBoolean(adatok.get(1));
+        cbGolyoValtoztatas.setSelected(Boolean.parseBoolean(adatok.get(2)));
+    }//GEN-LAST:event_mnBetoltActionPerformed
 
     /**
      * @param args the command line arguments
