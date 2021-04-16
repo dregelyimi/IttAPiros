@@ -5,17 +5,24 @@
  */
 package ittapiros;
 
-/**
- *
- * @author Drégely Imre
- */
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 public class NewJFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NewJFrame
-     */
+    int golyoPozicio;
+    boolean megvanAGolyo;
+    Random rnd = new Random();
+    
     public NewJFrame() {
         initComponents();
+        megvanAGolyo = false;
+        golyoPozicio = rnd.nextInt(3)+1;
     }
 
     /**
@@ -45,8 +52,18 @@ public class NewJFrame extends javax.swing.JFrame {
         setTitle("Itt a piros");
 
         btnPohar1.setText("Pohár 1");
+        btnPohar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPohar1ActionPerformed(evt);
+            }
+        });
 
         btnPohar2.setText("Pohár 2");
+        btnPohar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPohar2ActionPerformed(evt);
+            }
+        });
 
         btnPohar3.setText("Pohár 3");
         btnPohar3.addActionListener(new java.awt.event.ActionListener() {
@@ -62,6 +79,11 @@ public class NewJFrame extends javax.swing.JFrame {
         mnFajl.setText("Fájl");
 
         mnMentes.setText("Mentés");
+        mnMentes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnMentesActionPerformed(evt);
+            }
+        });
         mnFajl.add(mnMentes);
 
         mnBetolt.setText("Betöltés");
@@ -79,6 +101,11 @@ public class NewJFrame extends javax.swing.JFrame {
 
         rbm4Pohar.setSelected(true);
         rbm4Pohar.setText("4 pohár");
+        rbm4Pohar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbm4PoharActionPerformed(evt);
+            }
+        });
         mnUjJatek.add(rbm4Pohar);
 
         jMenu2.add(mnUjJatek);
@@ -93,33 +120,29 @@ public class NewJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(168, 168, 168)
-                        .addComponent(lbVisszajelzes)
-                        .addGap(190, 190, 190))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnPohar1)
-                        .addGap(77, 77, 77)
-                        .addComponent(btnPohar2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPohar3)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(btnPohar2))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(cbGolyoValtoztatas)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(lbVisszajelzes)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addComponent(btnPohar3)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPohar1)
                     .addComponent(btnPohar2)
                     .addComponent(btnPohar3))
-                .addGap(40, 40, 40)
+                .addGap(66, 66, 66)
                 .addComponent(lbVisszajelzes)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbGolyoValtoztatas)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -128,8 +151,63 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPohar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPohar3ActionPerformed
-        // TODO add your handling code here:
+        if (golyoPozicio == 3) {
+            lbVisszajelzes.setText("Megvan a golyó!");
+            megvanAGolyo = true;
+        } else {
+            lbVisszajelzes.setText("Nincs meg a golyó!");
+            if (cbGolyoValtoztatas.isSelected() == true) {
+                golyoPozicio=rnd.nextInt(3)+1;
+            }
+            megvanAGolyo = false;
+        }
+        
+        
     }//GEN-LAST:event_btnPohar3ActionPerformed
+
+    private void rbm4PoharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbm4PoharActionPerformed
+        JOptionPane.showMessageDialog(null, "Ez a mód jelenleg nem elérhető!", "Üzenet", HEIGHT);
+    }//GEN-LAST:event_rbm4PoharActionPerformed
+
+    private void mnMentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnMentesActionPerformed
+        try {
+            FileWriter writer = new FileWriter("confix.txt");
+            BufferedWriter mentes = new BufferedWriter(writer);
+            mentes.write(Integer.toString(golyoPozicio)+ "\n");
+            mentes.write(Boolean.toString(megvanAGolyo) + "\n");
+            mentes.write(Boolean.toString(cbGolyoValtoztatas.isSelected())+ "\n");
+            mentes.close();
+        } catch (IOException ex) {
+            System.out.println("Nem sikerült a mentés");
+        }
+    }//GEN-LAST:event_mnMentesActionPerformed
+
+    private void btnPohar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPohar1ActionPerformed
+        if (golyoPozicio == 1) {
+            lbVisszajelzes.setText("Megvan a golyó!");
+        } else {
+            lbVisszajelzes.setText("Nincs meg a golyó!");
+            if (cbGolyoValtoztatas.isSelected() == true) {
+                golyoPozicio=rnd.nextInt(3)+1;
+            }
+            megvanAGolyo = false;
+        }
+
+    }//GEN-LAST:event_btnPohar1ActionPerformed
+
+    private void btnPohar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPohar2ActionPerformed
+        if (golyoPozicio == 2) {
+            lbVisszajelzes.setText("Megvan a golyó!");
+        } else {
+            lbVisszajelzes.setText("Nincs meg a golyó!");
+            if (cbGolyoValtoztatas.isSelected() == true) {
+                golyoPozicio=rnd.nextInt(3)+1;
+            }
+            megvanAGolyo = false;
+        }
+        
+
+    }//GEN-LAST:event_btnPohar2ActionPerformed
 
     /**
      * @param args the command line arguments
